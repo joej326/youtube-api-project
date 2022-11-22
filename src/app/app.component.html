@@ -1,0 +1,32 @@
+<div class="main-container">
+  <div *ngIf="videos.length" class="page-change-buttons-container">
+    <button [disabled]="!prevPageToken" (click)="onPageChange('previous');">previous page</button>
+    <button [disabled]="!nextPageToken" (click)="onPageChange('next');">next page</button>
+  </div>
+  
+  
+  <div class="form-container">
+    <form [formGroup]="form" (ngSubmit)="searchForChannel();">
+      <label for="channel-search-input">Enter channel name:</label>
+      <input id="channel-search-input" type="text" formControlName="channelSearchQuery" autofocus>
+    </form>
+    <button (click)="searchForChannel();">Search</button>
+  </div>
+
+
+  
+  <div *ngFor="let channel of channels" (click)="onChannelSelect(channel);" class="link-container">
+    <h2>{{ channel.snippet.title }}</h2>
+    <img [src]="channel.snippet.thumbnails.default.url" alt="channel thumbnail">
+  </div>
+  
+  <div *ngFor="let video of videos" class="link-container">
+    <a [href]="'http://www.youtube.com/watch?v=' + video.id.videoId" target="_blank">
+      <p [innerHTML]="video.snippet.title"></p>
+      <img [src]="video.snippet.thumbnails.default.url" alt="video thumbnail">
+    </a>
+    <p>Published: {{ video.snippet.publishTime | date }}</p>
+  </div>
+  
+</div>
+
