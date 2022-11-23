@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { EMPTY, expand, of, takeWhile } from 'rxjs';
+import { EMPTY, expand, mergeMap, of, takeWhile } from 'rxjs';
 import { ApiService } from './services/api.service';
 
 @Component({
@@ -9,18 +9,19 @@ import { ApiService } from './services/api.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+  hideForm: boolean = false;  
   channels: any = [];
-
   videos: any = [];
   nextPageToken: string = '';
   prevPageToken: string = '';
   form: FormGroup = new FormGroup({});
   isLastPage: boolean = false;
   fetchedChannelId: string = '';
+  uploadsPlaylistId: string = '';
 
   constructor(private api: ApiService) { }
 
-
+  
   ngOnInit() {
 
     this.form = new FormGroup({
@@ -29,9 +30,8 @@ export class AppComponent implements OnInit {
   }
 
   onPageChange(event: 'previous' | 'next') {
-    this.api.getChannelVideos(this.fetchedChannelId, (event === 'next' ? this.nextPageToken : this.prevPageToken)).subscribe(
+    this.api.getChannelVideos(this.uploadsPlaylistId, (event === 'next' ? this.nextPageToken : this.prevPageToken)).subscribe(
       (data: any) => {
-        console.log('next page data:', data);
         this.videos = [...data.items];
         this.nextPageToken = data.nextPageToken || '';
         this.prevPageToken = data.prevPageToken || '';
@@ -40,29 +40,31 @@ export class AppComponent implements OnInit {
   }
 
   searchForChannel() {
-    console.log(this.form.get('channelSearchQuery')?.value);
+    this.hideForm = true;
     this.api.searchForChannel(this.form.get('channelSearchQuery')?.value).subscribe(
       (data: any) => {
-        console.log(data);
         this.channels = [...data.items];
       }
     );
   }
 
   onChannelSelect(channel: any) {
-    console.log(channel);
     this.channels = [];
     this.fetchedChannelId = channel.id.channelId;
 
-    this.api.getChannelVideos('', '').pipe(
-        expand((data: any) => data.nextPageToken ? this.api.getChannelVideos(this.fetchedChannelId, data.nextPageToken) : of('last page'))
-      ).subscribe(
+
+    this.api.getChannelPlaylists(this.fetchedChannelId).pipe(mergeMap((data: any) => {
+      this.uploadsPlaylistId = data.items[0].contentDetails.relatedPlaylists.uploads;
+
+      return this.api.getChannelVideos(this.uploadsPlaylistId, '').pipe(
+        expand((data: any) => data.nextPageToken ? this.api.getChannelVideos(this.uploadsPlaylistId, data.nextPageToken) : of('last page'))
+      )
+    })).subscribe(
       (data: any) => {
         if (data === 'last page') {
           this.isLastPage = true;
           return;
         }
-        console.log('data:', data);
         if (data.items) {
           this.videos = [...data.items];
         }

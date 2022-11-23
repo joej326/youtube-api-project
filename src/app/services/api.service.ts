@@ -16,8 +16,12 @@ export class ApiService {
     return this.http.get(`https://www.googleapis.com/youtube/v3/search?type=channel&part=snippet,id&key=${apiKey}&q=${query}`);
   }
 
-  getChannelVideos(channelId: string, nextPageToken: string) {
-    return this.http.get(`https://www.googleapis.com/youtube/v3/search?channelId=${channelId}&part=snippet,id&order=date&maxResults=50&key=${apiKey}&pageToken=${nextPageToken}`);
+  getChannelPlaylists(channelId: string) {
+    return this.http.get(`https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${channelId}&key=${apiKey}`);
+  }
+
+  getChannelVideos(playlistId: string, nextPageToken: string) {
+    return this.http.get(`https://www.googleapis.com/youtube/v3/playlistItems?playlistId=${playlistId}&part=snippet&maxResults=50&key=${apiKey}&pageToken=${nextPageToken}`);
   }
 
   

@@ -5,7 +5,7 @@
   </div>
   
   
-  <div class="form-container">
+  <div *ngIf="!hideForm" class="form-container">
     <form [formGroup]="form" (ngSubmit)="searchForChannel();">
       <label for="channel-search-input">Enter channel name:</label>
       <input id="channel-search-input" type="text" formControlName="channelSearchQuery" autofocus>
@@ -23,9 +23,9 @@
   <div *ngFor="let video of videos" class="link-container">
     <a [href]="'http://www.youtube.com/watch?v=' + video.id.videoId" target="_blank">
       <p [innerHTML]="video.snippet.title"></p>
-      <img [src]="video.snippet.thumbnails.default.url" alt="video thumbnail">
+      <img [src]="video.snippet.thumbnails.medium.url" alt="video thumbnail">
     </a>
-    <p>Published: {{ video.snippet.publishTime | date }}</p>
+    <p>Published: {{ video.snippet.publishedAt | date }}</p>
   </div>
   
 </div>
