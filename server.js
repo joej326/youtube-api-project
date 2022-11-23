@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 
-app.use(express.static(__dirname + '/dist/youtube-api-project'));
+app.use(express.static(__dirname + '/build/youtube-api-project'));
 
 const port = 3004;
 
