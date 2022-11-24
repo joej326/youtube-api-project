@@ -9,15 +9,17 @@ import { ApiService } from './services/api.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+  quotaExceeded: boolean = false;
+
   hideForm: boolean = false;  
   channels: any = [];
   videos: any = [];
-  nextPageToken: string = '';
-  prevPageToken: string = '';
   form: FormGroup = new FormGroup({});
   finishedLoading: boolean = false;
   fetchedChannelId: string = '';
   uploadsPlaylistId: string = '';
+  loading: boolean = false;
+  totalVideos: number = 0;
 
   constructor(private api: ApiService) { }
 
@@ -29,23 +31,15 @@ export class AppComponent implements OnInit {
     });
   }
 
-  onPageChange(event: 'previous' | 'next') {
-    this.api.getChannelVideos(this.uploadsPlaylistId, (event === 'next' ? this.nextPageToken : this.prevPageToken)).subscribe(
-      (data: any) => {
-        this.videos = [...data.items];
-        this.nextPageToken = data.nextPageToken || '';
-        this.prevPageToken = data.prevPageToken || '';
-      }
-    );
-  }
 
   searchForChannel() {
     this.hideForm = true;
-    this.api.searchForChannel(this.form.get('channelSearchQuery')?.value).subscribe(
-      (data: any) => {
+    this.api.searchForChannel(this.form.get('channelSearchQuery')?.value).subscribe({
+      next: (data: any) => {
         this.channels = [...data.items];
-      }
-    );
+      },
+      error: (err) => this.handleErr(err)
+    });
   }
 
   onChannelSelect(channel: any) {
@@ -55,22 +49,38 @@ export class AppComponent implements OnInit {
 
     this.api.getChannelPlaylists(this.fetchedChannelId).pipe(mergeMap((data: any) => {
       this.uploadsPlaylistId = data.items[0].contentDetails.relatedPlaylists.uploads;
+      this.loading = true;
 
       return this.api.getChannelVideos(this.uploadsPlaylistId, '').pipe(
         expand((data: any) => data.nextPageToken ? this.api.getChannelVideos(this.uploadsPlaylistId, data.nextPageToken) : of('last page'))
       )
-    })).subscribe(
-      (data: any) => {
+    })).subscribe({
+      next: (data: any) => {
+        if (this.finishedLoading) {
+          return;
+        }
         if (data === 'last page') {
           this.finishedLoading = true;
+          this.loading = false;
+          this.videos = [...this.videos].reverse();
           return;
         }
         if (data.items) {
-          this.videos = [...data.items];
+          this.videos = [...this.videos].concat(data.items);
+          this.totalVideos = data.pageInfo.totalResults;
         }
-        this.nextPageToken = data.nextPageToken;
-        this.prevPageToken = data.prevPageToken;
-      }
-    );
+      },
+      error: (err) => this.handleErr(err)
+   });
   }
+
+  handleErr(err: any) {
+    if (err.status === 403) {
+      this.quotaExceeded = true;
+    }
+  }
+
+
 }
+
+

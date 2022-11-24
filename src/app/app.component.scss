@@ -2,11 +2,12 @@
 .main-container {
     display: flex;
     justify-content: center;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
 }
 
-h3 {
+h2, h3, h4 {
     text-align: center;
 }
 
@@ -34,6 +35,8 @@ label {
 .link-container {
     display: block;
     padding: 10px;
+    margin: 5px 0;
+    width: 340px;
     display: flex;
     flex-direction: column;
     align-items: center;

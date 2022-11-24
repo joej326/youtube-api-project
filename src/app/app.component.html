@@ -1,9 +1,12 @@
+<h3 *ngIf="finishedLoading">Select a video and it will open in a new tab or in your YouTube app.</h3>
+<h2 *ngIf="quotaExceeded">The application is currently down because the daily YouTube API calls quota has been exceeded. <br> <br> Please try again tomorrow.</h2>
+
 <div class="main-container">
-  <div *ngIf="videos.length" class="page-change-buttons-container">
-    <button [disabled]="!prevPageToken" (click)="onPageChange('previous');">previous page (newer vids)</button>
-    <button [disabled]="!nextPageToken" (click)="onPageChange('next');">next page (older vids)</button>
+
+  <div *ngIf="loading" class="progress-bar-container">
+    <h4>loading...</h4>
+    <progress id="file" [value]="videos.length" [max]="totalVideos"></progress>
   </div>
-  <h3 *ngIf="finishedLoading">Select a video and it will open in a new tab or in your YouTube app.</h3>
   
   
   <div *ngIf="!hideForm" class="form-container">
@@ -15,19 +18,23 @@
   </div>
 
 
-  
-  <div *ngFor="let channel of channels" (click)="onChannelSelect(channel);" class="link-container">
-    <h2>{{ channel.snippet.title }}</h2>
-    <img [src]="channel.snippet.thumbnails.default.url" alt="channel thumbnail">
+  <div class="channel-container">
+    <div *ngFor="let channel of channels" (click)="onChannelSelect(channel);" class="link-container">
+      <h2>{{ channel.snippet.title }}</h2>
+      <img [src]="channel.snippet.thumbnails.default.url" alt="channel thumbnail">
+    </div>
   </div>
+
   
-  <div *ngFor="let video of videos; let i = index" class="link-container">
-    <a [href]="'http://www.youtube.com/watch?v=' + video.snippet.resourceId.videoId" target="_blank">
-      <p [innerHTML]="video.snippet.title"></p>
-      <img [src]="video.snippet.thumbnails.medium.url" alt="video thumbnail">
-    </a>
-    <p>Published: {{ video.snippet.publishedAt | date }}</p>
-  </div>
+  <ng-container *ngIf="finishedLoading">
+    <div *ngFor="let video of videos; let i = index" class="link-container">
+      <a [href]="'http://www.youtube.com/watch?v=' + video.snippet.resourceId.videoId" target="_blank">
+        <p [innerHTML]="video.snippet.title"></p>
+        <img [src]="video.snippet.thumbnails.medium.url" alt="video thumbnail">
+      </a>
+      <p>Published: {{ video.snippet.publishedAt | date }}</p>
+    </div>
+  </ng-container>
   
 </div>
 
