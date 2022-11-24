@@ -3,6 +3,7 @@
     <button [disabled]="!prevPageToken" (click)="onPageChange('previous');">previous page (newer vids)</button>
     <button [disabled]="!nextPageToken" (click)="onPageChange('next');">next page (older vids)</button>
   </div>
+  <h3 *ngIf="finishedLoading">Select a video and it will open in a new tab or in your YouTube app.</h3>
   
   
   <div *ngIf="!hideForm" class="form-container">

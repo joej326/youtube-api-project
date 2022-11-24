@@ -15,13 +15,13 @@ export class AppComponent implements OnInit {
   nextPageToken: string = '';
   prevPageToken: string = '';
   form: FormGroup = new FormGroup({});
-  isLastPage: boolean = false;
+  finishedLoading: boolean = false;
   fetchedChannelId: string = '';
   uploadsPlaylistId: string = '';
 
   constructor(private api: ApiService) { }
 
-  
+
   ngOnInit() {
 
     this.form = new FormGroup({
@@ -62,7 +62,7 @@ export class AppComponent implements OnInit {
     })).subscribe(
       (data: any) => {
         if (data === 'last page') {
-          this.isLastPage = true;
+          this.finishedLoading = true;
           return;
         }
         if (data.items) {
