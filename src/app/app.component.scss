@@ -1,3 +1,5 @@
+$link-container-width: 340px;
+
 
 .main-container {
     display: flex;
@@ -55,11 +57,15 @@ button {
     display: block;
     padding: 10px;
     margin: 5px 0;
-    width: 340px;
+    width: $link-container-width;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
+
+    & .video-title {
+        max-width: $link-container-width;
+    }
 
     & img {
         border-radius: 10px;
