@@ -14,6 +14,13 @@ h2, h3, h4 {
 h3 {
     margin: 25px 25px 0 25px;
 }
+h3.total-videos {
+    border-bottom: solid black 1px;
+    padding: 10px 0;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 200px;
+}
 
 a {
     display: flex;
@@ -34,6 +41,14 @@ form {
 
 label {
     display: block;
+}
+input {
+    width: 200px;
+    height: 25px;
+    font-size: 14px;
+}
+button {
+    height: 31px;
 }
 
 .link-container {
