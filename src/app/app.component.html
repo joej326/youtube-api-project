@@ -3,7 +3,11 @@
   <h3>Select a video and it will open in a new tab or in your YouTube app.</h3>
 </ng-container>
 
-<h2 *ngIf="quotaExceeded">The application is currently down because the daily YouTube API calls quota has been exceeded. <br> <br> Please try again tomorrow.</h2>
+<div *ngIf="quotaExceeded" class="quota-exceeded-msg">
+  <h2>If you're seeing this message, it's because I'm using the free YouTube API tier and the daily API call quota has been exceeded. <span>It should work if you try again tomorrow.</span></h2>
+  <h3>(if more people start using this, I'll consider upgrading to a paid tier 😁)</h3>
+</div>
+
 
 <div class="main-container">
 

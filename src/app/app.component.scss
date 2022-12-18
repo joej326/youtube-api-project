@@ -24,6 +24,24 @@ h3.total-videos {
     max-width: 200px;
 }
 
+.quota-exceeded-msg {
+    border: solid black 2px;
+    border-radius: 10px;
+    margin: 12%;
+    padding: 3%;
+
+    & h2,h3 {
+        margin: 0;
+    }
+    & h3 {
+        margin-top: 20px;
+    }
+    span {
+        margin-top: 10px;
+        display: block;
+    }
+}
+
 a {
     display: flex;
     justify-content: center;
