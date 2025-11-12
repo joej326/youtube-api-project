@@ -40,7 +40,7 @@
         <p class="video-title" [innerHTML]="video.snippet.title | ellipsis:35"></p>
         <img [src]="video.snippet.thumbnails.medium.url" alt="video thumbnail">
       </a>
-      <p>Published: {{ video.snippet.publishedAt | date }}</p>
+      <p>{{ video.snippet.publishedAt | date:'MMM, yyyy | hh:mma' }}</p>
     </div>
   </ng-container>
   
