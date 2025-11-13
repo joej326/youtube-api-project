@@ -25,10 +25,11 @@ h3.total-videos {
     max-width: 200px;
 }
 .reverse-videos-button {
-    margin: 15px auto 0 auto;
-    padding: 18px 20px 18px 20px;
     display: flex;
     align-items: center;
+    margin: 15px auto 0 auto;
+    padding: 18px 20px 18px 20px;
+    font-size: 14px;
 
     &:hover {
         cursor: pointer;
