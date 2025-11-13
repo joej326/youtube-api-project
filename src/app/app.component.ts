@@ -20,6 +20,7 @@ export class AppComponent implements OnInit {
   uploadsPlaylistId: string = '';
   loading: boolean = false;
   totalVideos: number = 0;
+  showingOldest: boolean = false;
 
   constructor(private api: ApiService) { }
 
@@ -62,7 +63,7 @@ export class AppComponent implements OnInit {
         if (data === 'last page') {
           this.finishedLoading = true;
           this.loading = false;
-          this.videos = [...this.videos].reverse();
+          this.reverseVideosArray();
           return;
         }
         if (data.items) {
@@ -72,6 +73,11 @@ export class AppComponent implements OnInit {
       },
       error: (err) => this.handleErr(err)
    });
+  }
+
+  reverseVideosArray() {
+    this.videos = [...this.videos].reverse();
+    this.showingOldest = !this.showingOldest;
   }
 
   handleErr(err: any) {

@@ -1,6 +1,7 @@
 <ng-container *ngIf="finishedLoading">
   <h3 class="total-videos">Total videos: {{ totalVideos | number }}</h3>
-  <h3>Select a video and it will open in a new tab or in your YouTube app.</h3>
+  <button class="reverse-videos-button" (click)="reverseVideosArray()">Show {{ showingOldest ? 'newest' : 'oldest' }}</button>
+  <!-- <h3>Select a video and it will open in a new tab or in your YouTube app.</h3> -->
 </ng-container>
 
 <div *ngIf="quotaExceeded" class="quota-exceeded-msg">
