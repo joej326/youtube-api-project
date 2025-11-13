@@ -40,9 +40,14 @@
         <p class="video-title" [innerHTML]="video.snippet.title | ellipsis:35"></p>
         <img [src]="video.snippet.thumbnails.medium.url" alt="video thumbnail">
       </a>
-      <p>{{ video.snippet.publishedAt | date:'MMM d, yyyy | hh:mma' }}</p>
+      <!-- <p class="date day">{{ video.snippet.publishedAt | date:'MMM d, yyyy | hh:mma' }}</p> -->
+      <p class="date day">{{ video.snippet.publishedAt | date:'EEEE, MMMM d, yyyy' }}</p>
+      <p class="date time">{{ video.snippet.publishedAt | date:'hh:mmaa' | lowercase }}</p>
     </div>
   </ng-container>
+
+  <!-- for testing purposes -->
+  <h2 class="test">{{ '2014-05-25T16:38:49Z' | date: 'MMM d (EEE), yyyy | hh:mm:ssaaaa ZZZZ'}}</h2>
   
 </div>
 
