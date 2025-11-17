@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { EMPTY, expand, mergeMap, of, takeWhile } from 'rxjs';
 import { ApiService } from './services/api.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +11,7 @@ import { ApiService } from './services/api.service';
 })
 export class AppComponent implements OnInit {
   quotaExceeded: boolean = false;
+  is404 = false;
 
   hideForm: boolean = false;  
   channels: any = [];
@@ -80,9 +82,14 @@ export class AppComponent implements OnInit {
     this.showingOldest = !this.showingOldest;
   }
 
-  handleErr(err: any) {
+  handleErr(err: HttpErrorResponse) {
     if (err.status === 403) {
       this.quotaExceeded = true;
+      this.loading = false;
+    }
+    if (err.status === 404) {
+      this.is404 = true;
+      this.loading = false;
     }
   }
 
