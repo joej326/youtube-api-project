@@ -4,6 +4,18 @@
   <!-- <h3>Select a video and it will open in a new tab or in your YouTube app.</h3> -->
 </ng-container>
 
+
+<div style="display: flex; justify-self: center;">
+<button (click)="prevPage()" [disabled]="currentClientPage === 1">Prev</button>
+
+  <span>Page {{ currentClientPage }} / {{ totalClientPages }}</span>
+
+<button (click)="nextPage()" [disabled]="currentClientPage === totalClientPages">Next</button>
+
+</div>
+
+
+
 <div *ngIf="quotaExceeded" class="quota-exceeded-msg">
   <h2>If you're seeing this message, it's because I'm using the free YouTube API tier and the daily API call quota has been exceeded. <span>It should work if you try again tomorrow.</span></h2>
   <h3>(if more people start using this, I'll consider upgrading to a paid tier 😁)</h3>
@@ -41,7 +53,7 @@
 
   
   <ng-container *ngIf="finishedLoading">
-    <div *ngFor="let video of videos;" class="link-container">
+    <div *ngFor="let video of videosToDisplay;" class="link-container">
       <a [href]="'http://www.youtube.com/watch?v=' + video.snippet.resourceId.videoId" target="_blank">
         <p class="video-title" [innerHTML]="video.snippet.title | ellipsis:35"></p>
         <img [src]="video.snippet.thumbnails.medium.url" alt="video thumbnail">

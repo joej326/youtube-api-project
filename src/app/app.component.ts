@@ -16,6 +16,7 @@ export class AppComponent implements OnInit {
   hideForm: boolean = false;  
   channels: any = [];
   videos: any = [];
+  videosToDisplay: any = [];
   form: FormGroup = new FormGroup({});
   finishedLoading: boolean = false;
   fetchedChannelId: string = '';
@@ -23,6 +24,11 @@ export class AppComponent implements OnInit {
   loading: boolean = false;
   totalVideos: number = 0;
   showingOldest: boolean = false;
+
+
+  clientPageSize = 5000;     // number of videos per UI page
+  currentClientPage = 1;     // UI page index starting at 1
+  visibleVideos: any[] = []; // only the slice shown in the UI
 
   constructor(private api: ApiService) { }
 
@@ -63,19 +69,53 @@ export class AppComponent implements OnInit {
           return;
         }
         if (data === 'last page') {
+          console.log('hit!');
+          this.chatGptMethod();
+
           this.finishedLoading = true;
           this.loading = false;
-          this.reverseVideosArray();
+          // this.reverseVideosArray();
           return;
         }
         if (data.items) {
           this.videos = [...this.videos].concat(data.items);
           this.totalVideos = data.pageInfo.totalResults;
+
+          this.chatGptMethod();
         }
       },
       error: (err) => this.handleErr(err)
    });
   }
+
+  chatGptMethod() {
+    const startIndex = (this.currentClientPage - 1) * this.clientPageSize;
+    const endIndex = startIndex + this.clientPageSize;
+
+    // Only slice if large dataset
+    if (this.videos.length > this.clientPageSize) {
+      this.videosToDisplay = this.videos.slice(startIndex, endIndex);
+    } else {
+      this.videosToDisplay = this.videos;
+    }
+  }
+  get totalClientPages(): number {
+  return Math.ceil(this.videos.length / this.clientPageSize);
+}
+
+prevPage(): void {
+  if (this.currentClientPage > 1) {
+    this.currentClientPage--;
+    this.chatGptMethod();
+  }
+}
+
+nextPage(): void {
+  if (this.currentClientPage < this.totalClientPages) {
+    this.currentClientPage++;
+    this.chatGptMethod();
+  }
+}
 
   reverseVideosArray() {
     this.videos = [...this.videos].reverse();
